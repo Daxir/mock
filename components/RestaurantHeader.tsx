@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, Text, Image, Pressable, View } from "react-native";
+import { StyleSheet, Text, Image, View } from "react-native";
 import { FontAwesome5, Ionicons, Entypo } from "@expo/vector-icons";
 
 interface IProps {
@@ -18,13 +18,10 @@ const RestaurantHeader: React.FunctionComponent<IProps> = ({
   distance,
 }) => {
   return (
-    <Pressable
-      onPress={() => console.log(`Siema ${name}`)}
-      style={styles.listItem}
-    >
+    <View style={styles.listItem}>
       <View style={styles.labelView}>
         <Text style={styles.listItemText}>{name}</Text>
-        <Text style={{ paddingBottom: 4 }}>
+        <Text>
           <Ionicons
             name="fast-food"
             size={13}
@@ -40,7 +37,7 @@ const RestaurantHeader: React.FunctionComponent<IProps> = ({
             color="black"
             style={{ paddingRight: 3 }}
           />
-          {cost.toFixed(2)}
+          {`${cost.toFixed(2)} zł`}
         </Text>
       </View>
       <View style={styles.logoView}>
@@ -60,7 +57,7 @@ const RestaurantHeader: React.FunctionComponent<IProps> = ({
           {distance.toFixed(2)} km
         </Text>
       </View>
-    </Pressable>
+    </View>
   );
 };
 
@@ -70,7 +67,7 @@ const styles = StyleSheet.create({
     marginVertical: 7,
     marginHorizontal: 20,
     flexDirection: "row",
-    justifyContent: "center",
+    //justifyContent: "center",
     borderRadius: 10,
     backgroundColor: "white",
     shadowColor: "#000",
@@ -88,7 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "400",
     textAlign: "left",
-    paddingBottom: 5,
+    paddingBottom: 10,
   },
   labelView: {
     flex: 7,

@@ -1,14 +1,9 @@
 import * as React from "react";
-import {
-  StyleSheet,
-  FlatList,
-  SafeAreaView,
-  TextInput,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import RestaurantHeader from "./components/RestaurantHeader";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import ListScreen from "./screens/ListScreen";
+import RestaurantScreen from "./screens/RestaurantScreen";
+import { RootStackParamList } from "./types/RootStackParamList";
 
 const RESTAURANTS = [
   {
@@ -76,74 +71,40 @@ const RESTAURANTS = [
   },
 ];
 
-export default function App(): React.ReactNode {
-  const [restList, setRestList] = React.useState(RESTAURANTS);
+const Stack = createStackNavigator<RootStackParamList>();
 
-  const updateList = (filter: string) => {
-    setRestList(
-      filter.length > 0
-        ? RESTAURANTS.filter((r) =>
-            r.key.toLowerCase().includes(filter.toLowerCase())
-          )
-        : RESTAURANTS
-    );
-  };
-
+const App: React.FunctionComponent = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.header}
-        autoCapitalize="none"
-        autoCorrect={false}
-        clearButtonMode="always"
-        onChangeText={(text) => {
-          updateList(text);
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "rgb(59, 108, 212)",
+          },
+          headerTintColor: "white",
+          headerTitleStyle: {
+            textAlign: "center",
+            fontSize: 25,
+            fontWeight: "400",
+          },
         }}
-        placeholder="Wpisz nazwę restauracji"
-      />
-      <FlatList
-        data={restList}
-        keyExtractor={(item) => item.key}
-        renderItem={({ item }) => (
-          <RestaurantHeader
-            name={item.key}
-            type={item.type}
-            cost={item.cost}
-            image={item.image}
-            distance={item.distance}
-          />
-        )}
-      />
-    </SafeAreaView>
+      >
+        <Stack.Screen
+          name="RestaurantList"
+          component={ListScreen}
+          initialParams={{ restaurants: RESTAURANTS }}
+          options={{
+            title: "Glove",
+          }}
+        />
+        <Stack.Screen
+          name="Restaurant"
+          component={RestaurantScreen}
+          options={({ route }) => ({ title: route.params.restaurantInfo.key })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-  },
-  text: {
-    color: "rgb(59, 108, 212)",
-    fontSize: 42,
-    fontWeight: "100",
-    textAlign: "center",
-  },
-  header: {
-    backgroundColor: "white",
-    padding: 5,
-    marginVertical: 7,
-    marginHorizontal: 20,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    elevation: 5,
-  },
-});
+export default App;
